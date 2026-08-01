@@ -300,47 +300,6 @@
 
 <main>
 
-  <section class="give" id="give">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Already gave? Log it here.</h2>
-        <div class="sub">This adds to a live community count on this page — anyone who opens it can see the same running total, updating in real time. It's <strong>self-reported</strong>, not checked against bank records, so it's kept separate from the confirmed CMRF total above.</div>
-      </div>
-      <div class="give-panel">
-        <div class="give-form">
-          <div class="field">
-            <label for="give-amount">Amount you gave (₹)</label>
-            <input type="number" id="give-amount" min="1" step="1" placeholder="e.g. 10">
-          </div>
-          <div class="quick-amts" id="quick-amts">
-            <button type="button" class="quick-amt" data-amt="1">₹1</button>
-            <button type="button" class="quick-amt" data-amt="10">₹10</button>
-            <button type="button" class="quick-amt" data-amt="50">₹50</button>
-            <button type="button" class="quick-amt" data-amt="100">₹100</button>
-            <button type="button" class="quick-amt" data-amt="500">₹500</button>
-          </div>
-          <div class="field">
-            <label for="give-name">Name (optional — leave blank to stay anonymous)</label>
-            <input type="text" id="give-name" placeholder="Anonymous" maxlength="40">
-          </div>
-          <div class="field">
-            <label for="give-where">Where you gave (optional)</label>
-            <input type="text" id="give-where" placeholder="e.g. cm.assam.gov.in, Bal Raksha Bharat" maxlength="60">
-          </div>
-          <button class="btn btn-brass give-submit" id="give-submit">Add my contribution</button>
-          <div class="give-status" id="give-status"></div>
-          <div class="give-disclaimer">By submitting, your amount and optional name become visible to everyone viewing this page. No payment is processed here — this only logs that a donation happened elsewhere.</div>
-        </div>
-        <div class="community-total">
-          <div class="cfigure" id="community-figure">₹0</div>
-          <div class="clabel">Community-reported total · unverified</div>
-          <div class="ccount" id="community-count">Loading contributions…</div>
-          <div class="feed" id="community-feed"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section id="channels">
     <div class="wrap">
       <div class="section-head">
@@ -424,25 +383,6 @@
         <div class="sub" id="big-gift-note"></div>
       </div>
       <div class="donate-grid" id="big-gift-grid"></div>
-
-      <div class="sandbox-block">
-        <div class="section-head" style="margin-bottom:12px;">
-          <h2 style="font-size:20px;">Try the payment flow</h2>
-          <div class="sub">A working demo of what in-app payment could look like — for presentation purposes only.</div>
-        </div>
-        <button class="btn btn-outline" id="sandbox-open">Open sandbox demo</button>
-        <div class="sandbox-panel" id="sandbox-panel">
-          <div class="sandbox-banner">⚠ SANDBOX MODE — this QR and button do not move real money</div>
-          <div class="sandbox-inner">
-            <div class="qr-wrap" id="sandbox-qr"></div>
-            <div>
-              <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; margin-bottom:10px;">Simulated amount: ₹100.00</div>
-              <button class="btn btn-brass" id="sandbox-pay">Simulate payment</button>
-              <div class="give-status" id="sandbox-result"></div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -457,7 +397,7 @@
         <li><strong>Get 80G status</strong> — so donors get the tax benefit that makes giving through the platform worth it.</li>
         <li><strong>FCRA registration</strong> — required before accepting any donation from outside India.</li>
         <li><strong>OR partner with an already-registered NGO</strong> — much faster: the platform provides the transparency layer, the NGO provides the legal custody and disbursement, matching how AFNA already works with FCRA-registered field partners.</li>
-        <li><strong>Only then</strong> — swap the sandbox payment flow for a real gateway (Razorpay/UPI), tied to the registered entity's account, with the same public ledger this page already shows.</li>
+        <li><strong>Only then</strong> — add a real payment gateway (Razorpay/UPI), tied to the registered entity's account, with the same public ledger this page already shows.</li>
       </ol>
     </div>
   </section>
@@ -2813,7 +2753,6 @@ var qrcode = function() {
 }(qrcode);
 
 </script>
-<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script>
 /* ============================================================
    DATA LAYER
@@ -3016,169 +2955,6 @@ function renderFieldOrgs(data){
     </div>`).join('');
 }
 
-/* ============================================================
-   COMMUNITY SELF-REPORTED COUNTER — backed by the real Node/Socket.io
-   backend in /backend. Falls back to a local-only demo mode (no
-   persistence, no cross-visitor sync) if the backend isn't reachable,
-   so the page still works stand-alone for quick previews.
-   ============================================================ */
-
-let lastCommunityTotal = 0;
-let localFallbackEntries = []; // used only if the backend is unreachable
-let socket = null;
-
-function animateCount(el, from, to, duration = 700, prefix = "₹"){
-  const start = performance.now();
-  function step(now){
-    const t = Math.min((now - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - t, 3);
-    const val = Math.round(from + (to - from) * eased);
-    el.textContent = `${prefix}${val.toLocaleString('en-IN')}`;
-    if (t < 1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
-
-function renderCommunityFeed(entries){
-  const feed = document.getElementById('community-feed');
-  if (!entries.length){
-    feed.innerHTML = `<div class="feed-empty">No contributions logged yet — be the first.</div>`;
-    return;
-  }
-  feed.innerHTML = entries.slice().sort((a,b)=>b.ts-a.ts).slice(0, 12).map(e => `
-    <div class="feed-row">
-      <span class="fname">${e.name || 'Anonymous'}${e.where ? ` · <span style="color:#8ba0ac">${e.where}</span>` : ''}</span>
-      <span class="famt">₹${Number(e.amount).toLocaleString('en-IN')}</span>
-    </div>`).join('');
-}
-
-function applyCommunityEntries(entries){
-  const total = entries.reduce((s, e) => s + Number(e.amount || 0), 0);
-  const figureEl = document.getElementById('community-figure');
-  animateCount(figureEl, lastCommunityTotal, total);
-  lastCommunityTotal = total;
-  document.getElementById('community-count').textContent =
-    `${entries.length} contribution${entries.length === 1 ? '' : 's'} logged`;
-  renderCommunityFeed(entries);
-}
-
-async function initCommunityLive(){
-  try {
-    const res = await fetch(`${API_URL}/api/community`, { signal: AbortSignal.timeout(3000) });
-    if (!res.ok) throw new Error('backend not ok');
-    const entries = await res.json();
-    applyCommunityEntries(entries);
-
-    // Live push: connect Socket.io so every open tab updates instantly,
-    // not just the one that submitted.
-    socket = io(API_URL, { transports: ['websocket', 'polling'] });
-    let liveEntries = entries.slice();
-    socket.on('community:snapshot', (snapshot) => {
-      liveEntries = snapshot;
-      applyCommunityEntries(liveEntries);
-    });
-    socket.on('community:new', (entry) => {
-      liveEntries = [...liveEntries, entry];
-      applyCommunityEntries(liveEntries);
-    });
-    return true;
-  } catch (e) {
-    document.getElementById('community-count').textContent =
-      'Backend not reachable — showing local-only demo mode.';
-    applyCommunityEntries(localFallbackEntries);
-    return false;
-  }
-}
-
-function setupGiveForm(){
-  const amountInput = document.getElementById('give-amount');
-  const nameInput = document.getElementById('give-name');
-  const whereInput = document.getElementById('give-where');
-  const submitBtn = document.getElementById('give-submit');
-  const status = document.getElementById('give-status');
-  const quickBtns = document.querySelectorAll('.quick-amt');
-
-  quickBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      quickBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      amountInput.value = btn.dataset.amt;
-    });
-  });
-
-  submitBtn.addEventListener('click', async () => {
-    const amount = Number(amountInput.value);
-    if (!amount || amount <= 0){
-      status.textContent = 'Enter an amount greater than ₹0.';
-      status.className = 'give-status err';
-      return;
-    }
-    submitBtn.disabled = true;
-    status.textContent = 'Adding…';
-    status.className = 'give-status';
-
-    const payload = {
-      amount,
-      name: nameInput.value.trim().slice(0,40),
-      where: whereInput.value.trim().slice(0,60),
-    };
-
-    try {
-      const res = await fetch(`${API_URL}/api/community`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(4000),
-      });
-      if (!res.ok) throw new Error('backend rejected the request');
-      // No need to manually refresh — the socket 'community:new' event
-      // (including our own) will update the total live.
-      status.textContent = 'Added — thank you.';
-      status.className = 'give-status ok';
-    } catch (e) {
-      // Backend unreachable — fall back to a local-only demo entry so the
-      // UI still responds (clearly not synced across other visitors).
-      const entry = { ...payload, ts: Date.now() };
-      localFallbackEntries.push(entry);
-      applyCommunityEntries(localFallbackEntries);
-      status.textContent = 'Backend unreachable — added locally only (not synced).';
-      status.className = 'give-status err';
-    } finally {
-      amountInput.value = '';
-      nameInput.value = '';
-      whereInput.value = '';
-      quickBtns.forEach(b => b.classList.remove('active'));
-      submitBtn.disabled = false;
-    }
-  });
-}
-
-function setupSandboxDemo(){
-  const openBtn = document.getElementById('sandbox-open');
-  const panel = document.getElementById('sandbox-panel');
-  const payBtn = document.getElementById('sandbox-pay');
-  const result = document.getElementById('sandbox-result');
-  const qrHolder = document.getElementById('sandbox-qr');
-  if (!openBtn) return;
-
-  qrHolder.innerHTML = qrSVG('upi://pay?pa=demo@sandbox&pn=SandboxDemo&am=100&cu=INR&tn=SIH-demo-only', 150);
-
-  openBtn.addEventListener('click', () => {
-    panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-  });
-
-  payBtn.addEventListener('click', () => {
-    payBtn.disabled = true;
-    result.textContent = 'Processing sandbox transaction…';
-    result.className = 'give-status';
-    setTimeout(() => {
-      result.textContent = '✓ Sandbox payment simulated successfully — no real money moved.';
-      result.className = 'give-status ok';
-      payBtn.disabled = false;
-    }, 1400);
-  });
-}
-
 (async function init(){
   const data = await loadData();
   renderGauge(data);
@@ -3189,10 +2965,6 @@ function setupSandboxDemo(){
   renderDonate(data);
   renderChannelTotals(data);
   renderFieldOrgs(data);
-
-  setupGiveForm();
-  setupSandboxDemo();
-  await initCommunityLive();
 })();
 </script>
 
