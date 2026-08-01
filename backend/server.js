@@ -22,6 +22,13 @@ const app = express();
 app.use(cors()); // for the hackathon demo this is wide open; tighten to your frontend's origin before a real deploy
 app.use(express.json());
 
+// ---------------------------------------------------------------------
+// Serve the frontend. index.html lives one level up from /backend, at
+// the project root, so we point static serving there.
+// ---------------------------------------------------------------------
+const FRONTEND_DIR = path.join(__dirname, "..");
+app.use(express.static(FRONTEND_DIR));
+
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
 
@@ -108,6 +115,12 @@ app.post("/api/community", (req, res) => {
 
 // simple health check — useful once this is on Render
 app.get("/health", (req, res) => res.json({ ok: true, time: new Date().toISOString() }));
+
+// Fallback: any non-API GET request gets the frontend, so a hard refresh
+// on a client-side route still loads the page instead of 404ing.
+app.get(/^\/(?!api\/|health).*/, (req, res) => {
+  res.sendFile(path.join(FRONTEND_DIR, "index.html"));
+});
 
 io.on("connection", (socket) => {
   // Send the current list once on connect so a fresh tab isn't empty
