@@ -1,0 +1,46 @@
+{
+  "officialTotalCr": 26.58,
+  "officialTotalAsOf": "29 Jul 2026",
+  "officialSourceUrl": "https://ukhrultimes.com/assam-cm-announces-flood-relief-amit-shah-takes-stock/",
+  "officialSourceName": "Chief Minister's public statement",
+  "gaugeMilestonesCr": [
+    { "label": "Relief line", "value": 10 },
+    { "label": "Rehab line", "value": 30 },
+    { "label": "Rebuild line", "value": 60 }
+  ],
+  "gaugeMaxCr": 65,
+  "stats": [
+    { "num": "7,05,148", "cap": "People affected · 12 districts (Sphere India, 25 Jul)" },
+    { "num": "78", "cap": "Confirmed deaths (as of 30 Jul)" },
+    { "num": "₹9L", "cap": "Ex-gratia per death from CMRF + state" },
+    { "num": "12", "cap": "Districts under flood impact" }
+  ],
+  "ledger": [
+    { "donor": "Gautam Adani (Adani Group)", "amountCr": 11, "date": "31 Jul 2026", "status": "reported", "src": "https://www.newkerala.com/news/a/adani-group-chairman-donates-rs-11-crore-assam-620.htm", "srcName": "Newkerala" },
+    { "donor": "State Bank of India (incl. ₹1Cr staff one-day salary)", "amountCr": 1.60, "date": "30 Jul 2026", "status": "reported", "src": "https://www.sentinelassam.com/breakingnews/sbi-donates-rs-160-crore-to-assam-cm-relief-fund-as-flood-recovery-continues", "srcName": "Sentinel Assam" },
+    { "donor": "Kartik Aaryan", "amountCr": 1, "date": "30 Jul 2026", "status": "reported", "src": "https://www.outlookindia.com/art-entertainment/kartik-aaryan-donates-rs-1-crore-for-assam-flood-relief", "srcName": "Outlook India" },
+    { "donor": "Directorate of Sainik Welfare, Assam", "amountCr": 0.25, "date": "31 Jul 2026", "status": "reported", "src": "https://dailypioneer.com/news/slug-lite/sainik-welfare-assam-contributes-rs-25-lakh-to-cms-relief-fund?year=2026", "srcName": "Daily Pioneer" }
+  ],
+  "channelTotals": [
+    { "name": "CM's Relief Fund (official, INR)", "value": "₹26.58 Cr", "asOf": "29 Jul 2026", "src": "https://ukhrultimes.com/assam-cm-announces-flood-relief-amit-shah-takes-stock/", "srcName": "CM's office statement" },
+    { "name": "Assam Foundation of North America (USD)", "value": "$29,800 · 173 donors", "asOf": "27 Jul 2026", "src": "https://www.assamfoundation.net/flood-relief", "srcName": "AFNA campaign page" },
+    { "name": "Bal Raksha Bharat / Save the Children", "value": "Target: reach 3,500 people / 700 households", "asOf": "25 Jul 2026", "src": "https://balrakshabharat.org/assam-flood-appeal-2026/", "srcName": "Bal Raksha Bharat appeal" }
+  ],
+  "largeGiftNote": "Currencies aren't combined into one figure here on purpose — a rupee total and a dollar total added together would just be a made-up number. Each channel's real total is shown as reported.",
+  "institutionalGiving": [
+    { "org": "CM's Relief Fund — cheque / RTGS / NEFT for institutional or CSR gifts", "note": "Bank and reference details are listed on the official donate page — this page doesn't reproduce financial account numbers second-hand.", "url": "https://cm.assam.gov.in/donate" },
+    { "org": "NGO CSR / major-donor desks", "note": "Save the Children, AFNA and similar registered orgs list CSR/partnership contact routes on their own sites for gifts at this scale.", "url": "https://balrakshabharat.org/assam-flood-appeal-2026/" }
+  ],
+  "fieldOrgs": [
+    { "name": "Indian Red Cross Society, Assam State Branch", "role": "Frontline distribution of food, water, clothing and supplies; decades-long presence in Assam's annual flood response.", "src": "https://disasterrelieforganizations.com/disasters/assam-floods-2026" },
+    { "name": "CARE & Save the Children", "role": "Supporting relief camps, hygiene provision, and child protection services.", "src": "https://disasterrelieforganizations.com/disasters/assam-floods-2026" },
+    { "name": "Oxfam India, Goonj, Rapid Response", "role": "Parallel relief operations across affected districts.", "src": "https://disasterrelieforganizations.com/disasters/assam-floods-2026" },
+    { "name": "ActionAid Association", "role": "Emergency relief in Sivasagar, Charaideo and Upper Assam flood zones.", "src": "https://www.actionaidindia.org/assam-flood-relief-campaign/" },
+    { "name": "NFR Bharat Scouts & Guides", "role": "Citizen-level collection drive at NFR HQ Maligaon; materials distributed in Sivasagar & Jorhat.", "src": "https://www.sentinelassam.com/cities/guwahati-city/nfr-bharat-scouts-guides-launch-flood-relief-drive-in-assam" }
+  ],
+  "donateOptions": [
+    { "org": "Assam CM's Relief Fund", "desc": "Official state fund. 80G tax-exempt. Pay via netbanking, cards, or UPI.", "url": "https://cm.assam.gov.in/donate", "verified": "Official govt. domain" },
+    { "org": "Save the Children / Bal Raksha Bharat", "desc": "On-ground relief for children and families across the worst-hit districts.", "url": "https://balrakshabharat.org/assam-flood-appeal-2026/", "verified": "Registered NGO, published field updates" },
+    { "org": "Assam Foundation of North America", "desc": "Volunteer-run; partners with FCRA-registered orgs for on-ground distribution.", "url": "https://www.assamfoundation.net/flood-relief", "verified": "Publishes dated spend updates" }
+  ]
+}
