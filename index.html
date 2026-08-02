@@ -342,20 +342,19 @@
         <div class="sub">This is the part governments are usually slowest to publish. Here's the honest state of it.</div>
       </div>
       <div class="accountability">
-        <h3>Utilisation disclosure</h3>
-        <p>A district-wise or head-wise spending breakdown for the 2026 Relief Fund has not been published as a itemised public account as of this page's last update. One confirmed policy is listed below because it's the only spending rule made public so far.</p>
-        <div class="pending-row">
-          <span>Ex-gratia per flood death (₹4L base + ₹5L top-up from CMRF)</span>
-          <span class="pending-status tag-verified" style="color:var(--ok);">₹9,00,000 confirmed</span>
-        </div>
-        <div class="pending-row">
-          <span>Itemised relief camp / distribution spend</span>
-          <span class="pending-status">Not yet published</span>
-        </div>
-        <div class="pending-row">
-          <span>House / handloom / agricultural damage compensation, district-wise</span>
-          <span class="pending-status">Assessment ongoing, amounts not yet published</span>
-        </div>
+        <h3>Announced allocations</h3>
+        <p id="disbursement-gap-note"></p>
+        <div id="disbursement-rows"></div>
+      </div>
+      <div class="accountability" id="rti-block" style="margin-top:20px;">
+        <h3>Push for the real breakdown</h3>
+        <p id="rti-note"></p>
+        <a class="btn btn-outline" id="rti-link" href="#" target="_blank" rel="noopener">File an RTI request →</a>
+      </div>
+      <div class="accountability" id="scam-block" style="margin-top:20px;">
+        <h3>⚠ Scam Watch</h3>
+        <div id="scam-rows"></div>
+        <p style="margin-top:10px; font-size:13px; color:#8ba0ac;">Only trust the donate links below, or an org's own official domain. Be wary of payment links shared in WhatsApp/social forwards, urgency pressure, or accounts with no verifiable registration.</p>
       </div>
     </div>
   </section>
@@ -2889,6 +2888,31 @@ function renderLedger(data){
     </tr>`).join('');
 }
 
+function renderDisbursement(data){
+  document.getElementById('disbursement-gap-note').textContent = data.disbursementGapNote || '';
+
+  const rows = document.getElementById('disbursement-rows');
+  rows.innerHTML = (data.disbursementAnnounced || []).map(d => `
+    <div class="pending-row">
+      <span><strong>${d.category}</strong> — ${d.detail}</span>
+      <span class="pending-status tag-verified" style="color:var(--ok);">
+        <a href="${d.src}" target="_blank" rel="noopener" style="color:inherit;">Source ↗</a>
+      </span>
+    </div>`).join('');
+
+  if (data.rtiInfo){
+    document.getElementById('rti-note').textContent = data.rtiInfo.note;
+    document.getElementById('rti-link').href = data.rtiInfo.url;
+  }
+
+  const scamRows = document.getElementById('scam-rows');
+  scamRows.innerHTML = (data.scamWarnings || []).map(s => `
+    <div class="pending-row">
+      <span>${s.warning}</span>
+      <span class="pending-status"><a href="${s.src}" target="_blank" rel="noopener" style="color:inherit;">${s.srcName} ↗</a></span>
+    </div>`).join('');
+}
+
 function renderFacts(data){
   // reuse stats as fact cards for the "ground truth" section, styled differently
   const grid = document.getElementById('facts-grid');
@@ -2962,6 +2986,7 @@ function renderFieldOrgs(data){
   renderStats(data);
   renderLedger(data);
   renderFacts(data);
+  renderDisbursement(data);
   renderDonate(data);
   renderChannelTotals(data);
   renderFieldOrgs(data);

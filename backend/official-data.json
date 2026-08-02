@@ -31,6 +31,22 @@
     { "org": "CM's Relief Fund — cheque / RTGS / NEFT for institutional or CSR gifts", "note": "Bank and reference details are listed on the official donate page — this page doesn't reproduce financial account numbers second-hand.", "url": "https://cm.assam.gov.in/donate" },
     { "org": "NGO CSR / major-donor desks", "note": "Save the Children, AFNA and similar registered orgs list CSR/partnership contact routes on their own sites for gifts at this scale.", "url": "https://balrakshabharat.org/assam-flood-appeal-2026/" }
   ],
+  "disbursementAnnounced": [
+    { "category": "Death compensation", "detail": "₹9,00,000 per deceased (₹4L ex-gratia, post-mortem requirement waived + ₹5L CMRF top-up)", "src": "https://www.republicworld.com/india/assam-floods-death-toll-reaches-75-cm-sarma-announces-rs-9-lakh-relief-for-affected-families-2026-07-29-133644", "srcName": "Republic World" },
+    { "category": "Immediate cash relief", "detail": "₹15,000 each to over 1,00,000 severely flood-affected families for essential needs", "src": "https://www.republicworld.com/india/assam-floods-death-toll-reaches-75-cm-sarma-announces-rs-9-lakh-relief-for-affected-families-2026-07-29-133644", "srcName": "Republic World" },
+    { "category": "Orunodoi scheme top-up", "detail": "₹2,500 special instalment (up from the usual ₹1,250) for beneficiaries in Charaideo, Jorhat, Golaghat and Sivasagar, resuming 1 Aug 2026", "src": "https://www.republicworld.com/india/assam-floods-death-toll-reaches-75-cm-sarma-announces-rs-9-lakh-relief-for-affected-families-2026-07-29-133644", "srcName": "Republic World" },
+    { "category": "Student support", "detail": "Book grants ₹1,000 (Higher Secondary) to ₹5,000 (Post-Graduate); free duplicate mark sheets/certificates, no fee charged by schools, colleges, universities or SEBA", "src": "https://www.republicworld.com/india/assam-floods-death-toll-reaches-75-cm-sarma-announces-rs-9-lakh-relief-for-affected-families-2026-07-29-133644", "srcName": "Republic World" }
+  ],
+  "disbursementGapNote": "These are announced policy commitments, not an audited spend report. The CM Relief Fund's own beneficiary-info page states funds are utilised \"at the discretion of the Chief Minister\" — there's no requirement for a public, itemised account of how the ₹26.58 Cr collected breaks down against these schemes, or what portion has actually reached people versus what's still pending disbursement.",
+  "rtiInfo": {
+    "url": "https://rtionline.assam.gov.in/",
+    "note": "Official Assam state RTI portal. You can file a request to the Revenue & Disaster Management Department for an itemised CMRF spend report — ₹10 fee, 30-day statutory response window.",
+    "src": "https://rtionline.assam.gov.in/",
+    "srcName": "Assam State RTI Online Portal"
+  },
+  "scamWarnings": [
+    { "warning": "There have been confirmed reports of fake donation accounts and social media relief-fraud schemes exploiting the 2026 Assam floods.", "src": "https://oktelugu.com/india/assam-flood-scam-fake-donation-accounts-social-media-relief-fraud-635038.html", "srcName": "OK Telugu / India Today DSI investigation" }
+  ],
   "fieldOrgs": [
     { "name": "Indian Red Cross Society, Assam State Branch", "role": "Frontline distribution of food, water, clothing and supplies; decades-long presence in Assam's annual flood response.", "src": "https://disasterrelieforganizations.com/disasters/assam-floods-2026" },
     { "name": "CARE & Save the Children", "role": "Supporting relief camps, hygiene provision, and child protection services.", "src": "https://disasterrelieforganizations.com/disasters/assam-floods-2026" },
@@ -41,6 +57,11 @@
   "donateOptions": [
     { "org": "Assam CM's Relief Fund", "desc": "Official state fund. 80G tax-exempt. Pay via netbanking, cards, or UPI.", "url": "https://cm.assam.gov.in/donate", "verified": "Official govt. domain" },
     { "org": "Save the Children / Bal Raksha Bharat", "desc": "On-ground relief for children and families across the worst-hit districts.", "url": "https://balrakshabharat.org/assam-flood-appeal-2026/", "verified": "Registered NGO, published field updates" },
-    { "org": "Assam Foundation of North America", "desc": "Volunteer-run; partners with FCRA-registered orgs for on-ground distribution.", "url": "https://www.assamfoundation.net/flood-relief", "verified": "Publishes dated spend updates" }
+    { "org": "Assam Foundation of North America", "desc": "Volunteer-run; partners with FCRA-registered orgs for on-ground distribution.", "url": "https://www.assamfoundation.net/flood-relief", "verified": "Publishes dated spend updates" },
+    { "org": "Indian Red Cross Society, Assam State Branch", "desc": "Frontline distribution of food, water, clothing and supplies; decades-long presence in Assam's flood response.", "url": "https://www.indianredcross.org/", "verified": "Government-linked humanitarian body" },
+    { "org": "ActionAid Association", "desc": "Emergency relief across Upper Assam and neighbouring Nagaland flood zones. Operating in India since 1972.", "url": "https://www.actionaidindia.org/assam-flood-relief-campaign/", "verified": "Registered NGO, published campaign page" },
+    { "org": "Akshaya Patra Foundation", "desc": "Serving 3,000+ hot meals daily across seven flood-hit locations in Jorhat and Sivasagar.", "url": "https://www.akshayapatra.org/assam-flood-relief", "verified": "Large-scale, publicly documented kitchen operations" },
+    { "org": "Smile Foundation", "desc": "Relief camps, mobile healthcare and WASH (water/sanitation) initiatives for flood-affected communities.", "url": "https://www.smilefoundationindia.org/blog/assam-flood-relief-the-real-emergency-begins-after-the-flood/", "verified": "Registered NGO, published relief page" },
+    { "org": "Sayanant Development Foundation", "desc": "Assam-based, working directly in Sivasagar, Charaideo and Jorhat districts.", "url": "https://sayanant.org/campaigns/assam-flood-relief-2026", "verified": "Regional NGO — verify registration details before large gifts" }
   ]
 }
