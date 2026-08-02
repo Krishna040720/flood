@@ -14,6 +14,7 @@ const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 const ledgerChain = require("./ledgerChain");
+const githubStore = require("./githubStore");
 
 const app = express();
 app.use(cors()); // for the hackathon demo this is wide open; tighten to your frontend's origin before a real deploy
@@ -43,15 +44,71 @@ function loadOfficialData() {
   }
 }
 
-// Seed the hash-chained ledger log from official-data.json the first time
-// the server runs on a fresh checkout. After that the log file is the
-// source of truth for the ledger — add new entries with add-ledger-entry.js.
-(function seedLedgerOnBoot() {
+// ---------------------------------------------------------------------
+// GITHUB-BACKED LEDGER STORAGE (optional) — Render's free tier disk is
+// ephemeral, so without this, ledger-log.jsonl resets on every redeploy
+// or cold-start restart. If GITHUB_TOKEN/OWNER/REPO are set, the ledger
+// log is pulled from and pushed to a GitHub repo instead — free forever,
+// and every commit becomes a second, independent tamper-evidence trail
+// on top of the hash chain itself.
+//
+// Not configured? The app falls back to local-disk-only storage
+// automatically — nothing breaks, you just lose entries on redeploy
+// until you set these.
+// ---------------------------------------------------------------------
+const GH = {
+  owner: process.env.GITHUB_OWNER,
+  repo: process.env.GITHUB_REPO,
+  path: process.env.GITHUB_LEDGER_PATH || "backend/ledger-log.jsonl",
+  branch: process.env.GITHUB_BRANCH || "main",
+  token: process.env.GITHUB_TOKEN,
+};
+const GH_ENABLED = Boolean(GH.owner && GH.repo && GH.token);
+let ghSha = null; // tracks the last known commit sha, needed to push updates
+
+async function bootLedger() {
   const data = loadOfficialData();
-  if (data && Array.isArray(data.ledger)) {
-    ledgerChain.seedIfEmpty(data.ledger);
+  const seedEntries = data && Array.isArray(data.ledger) ? data.ledger : [];
+
+  if (!GH_ENABLED) {
+    ledgerChain.seedIfEmpty(seedEntries);
+    console.log("Ledger: local disk only (set GITHUB_OWNER/REPO/TOKEN for durable storage).");
+    return;
   }
-})();
+
+  try {
+    const remote = await githubStore.pullFile(GH);
+    if (remote) {
+      ledgerChain.overwriteLogFileRaw(remote.content);
+      ghSha = remote.sha;
+      console.log(`Ledger: loaded ${ledgerChain.readLog().length} entries from GitHub.`);
+    } else {
+      // Repo has no ledger file yet — seed locally, then commit that as
+      // the first version so future restarts have something to pull.
+      ledgerChain.seedIfEmpty(seedEntries);
+      const content = ledgerChain.readLogFileRaw();
+      ghSha = await githubStore.pushFile({
+        ...GH,
+        content,
+        message: `Seed ledger log (${ledgerChain.readLog().length} entries)`,
+      });
+      console.log("Ledger: seeded and pushed initial version to GitHub.");
+    }
+  } catch (e) {
+    console.error("GitHub sync failed, falling back to local disk:", e.message);
+    ledgerChain.seedIfEmpty(seedEntries);
+  }
+}
+
+// Called by add-ledger-entry.js after a local append, so the GitHub copy
+// stays in sync. Safe to call even when GitHub isn't configured — it's a
+// no-op then.
+async function pushLedgerToGitHub(commitMessage) {
+  if (!GH_ENABLED) return false;
+  const content = ledgerChain.readLogFileRaw();
+  ghSha = await githubStore.pushFile({ ...GH, content, sha: ghSha, message: commitMessage });
+  return true;
+}
 
 // ---------------------------------------------------------------------
 // FRESHNESS — flag data as possibly stale instead of silently letting a
@@ -91,12 +148,12 @@ function computeFreshness(data) {
 app.get("/api/donations", (req, res) => {
   const data = loadOfficialData();
   if (!data) return res.status(500).json({ error: "official data unavailable" });
-  // Ledger now comes from the verified hash chain, not the raw JSON array.
   const chain = ledgerChain.readLog();
   res.json({
     ...data,
     ledger: chain.length ? chain : data.ledger,
     freshness: computeFreshness(data),
+    ledgerStorage: GH_ENABLED ? "github" : "local-disk-only",
   });
 });
 
@@ -114,7 +171,9 @@ app.get("/api/ledger", (req, res) => {
 });
 
 // simple health check — useful once this is on Render
-app.get("/health", (req, res) => res.json({ ok: true, time: new Date().toISOString() }));
+app.get("/health", (req, res) =>
+  res.json({ ok: true, time: new Date().toISOString(), ledgerStorage: GH_ENABLED ? "github" : "local-disk-only" })
+);
 
 // Fallback: any non-API GET request gets the frontend, so a hard refresh
 // on a client-side route still loads the page instead of 404ing.
@@ -122,6 +181,11 @@ app.get(/^\/(?!api\/|health).*/, (req, res) => {
   res.sendFile(path.join(FRONTEND_DIR, "index.html"));
 });
 
-app.listen(PORT, () => {
-  console.log(`Assam flood relief backend listening on :${PORT}`);
-});
+(async function main() {
+  await bootLedger();
+  app.listen(PORT, () => {
+    console.log(`Assam flood relief backend listening on :${PORT}`);
+  });
+})();
+
+module.exports = { pushLedgerToGitHub };

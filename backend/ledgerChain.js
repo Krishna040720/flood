@@ -88,4 +88,22 @@ function verifyChain() {
   return { valid: true, length: log.length, headHash: prevHash };
 }
 
-module.exports = { readLog, seedIfEmpty, appendEntry, verifyChain, computeHash, GENESIS_HASH };
+function readLogFileRaw() {
+  return fs.existsSync(LOG_PATH) ? fs.readFileSync(LOG_PATH, "utf8") : "";
+}
+
+function overwriteLogFileRaw(content) {
+  fs.writeFileSync(LOG_PATH, content);
+}
+
+module.exports = {
+  readLog,
+  seedIfEmpty,
+  appendEntry,
+  verifyChain,
+  computeHash,
+  GENESIS_HASH,
+  LOG_PATH,
+  readLogFileRaw,
+  overwriteLogFileRaw,
+};
