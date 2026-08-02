@@ -1,0 +1,13 @@
+{
+  "_comment": "RSS/news feeds the watcher checks each hour for candidate donation reports. Edit freely — add or remove feeds. Google News RSS search is a broad net; swap in specific outlets' own RSS feeds as you find reliable ones.",
+  "feeds": [
+    {
+      "name": "Google News: Assam flood relief donation",
+      "url": "https://news.google.com/rss/search?q=Assam+flood+relief+donate+crore&hl=en-IN&gl=IN&ceid=IN:en"
+    },
+    {
+      "name": "Google News: Assam CM Relief Fund total",
+      "url": "https://news.google.com/rss/search?q=Assam+CM+Relief+Fund+total+crore&hl=en-IN&gl=IN&ceid=IN:en"
+    }
+  ]
+}

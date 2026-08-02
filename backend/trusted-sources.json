@@ -1,0 +1,8 @@
+{
+  "_comment": "Domains the watcher auto-publishes from WITHOUT waiting for manual review. Keep this short and genuinely authoritative — official government domains, the CMRF's own site, well-established wire services. Everything else always lands in the pending review queue, no matter what it claims. Add domains carefully: anything here can put a figure on the public ledger unattended.",
+  "domains": [
+    "cm.assam.gov.in",
+    "assam.gov.in",
+    "pib.gov.in"
+  ]
+}
