@@ -180,6 +180,37 @@
   .pending-row:first-of-type{margin-top:16px;}
   .pending-status{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--danger); text-transform:uppercase;}
 
+  /* ---- tamper-evident chain badge ---- */
+  .chain-badge{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:none;
+    font-weight:400; margin-left:10px; padding:3px 9px; border-radius:20px;
+    vertical-align:middle; display:inline-block;
+    background:rgba(22,40,58,0.06); color:var(--ink-soft);
+  }
+  .chain-badge.chain-ok{background:rgba(46,125,50,0.12); color:var(--ok, #2e7d32);}
+  .chain-badge.chain-broken{background:rgba(198,40,40,0.12); color:var(--danger, #c62828);}
+
+  /* ---- freshness banner ---- */
+  .freshness-banner-box{
+    border:1px dashed var(--danger, #c62828); background:rgba(198,40,40,0.05);
+    border-radius:8px; padding:12px 16px; margin-bottom:16px; font-size:13px;
+  }
+  .freshness-banner-box.freshness-ok{
+    border:1px solid var(--line); background:rgba(46,125,50,0.05); color:var(--ink-soft);
+  }
+  .freshness-item{padding:2px 0; color:var(--danger, #c62828);}
+
+  /* ---- language toggle ---- */
+  .lang-toggle{
+    display:inline-flex; gap:2px; font-family:'IBM Plex Mono',monospace; font-size:12px;
+    border:1px solid var(--line); border-radius:20px; padding:2px; margin-left:10px;
+  }
+  .lang-toggle button{
+    border:none; background:transparent; padding:4px 12px; border-radius:16px;
+    cursor:pointer; color:var(--ink-soft); font-family:inherit; font-size:inherit;
+  }
+  .lang-toggle button.active{background:var(--ink, #16283a); color:#fff;}
+
   /* ---- ex-gratia box ---- */
   .facts-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
   @media (max-width:720px){.facts-grid{grid-template-columns:1fr;}}
@@ -248,19 +279,23 @@
 
 <div class="topbar">
   <div class="wrap">
-    <span class="badge"><span class="dot"></span> LIVE TRACKER — INDEPENDENT, NOT AN OFFICIAL GOVERNMENT SITE</span>
+    <span class="badge"><span class="dot"></span> <span data-i18n="badge">LIVE TRACKER — INDEPENDENT, NOT AN OFFICIAL GOVERNMENT SITE</span></span>
     <span class="mono" id="clock-line">Assam · 2026 Flood Season</span>
+    <span class="lang-toggle" id="lang-toggle">
+      <button type="button" data-lang="en" class="active">EN</button>
+      <button type="button" data-lang="as">অসমীয়া</button>
+    </span>
   </div>
 </div>
 
 <header class="hero">
   <div class="wrap">
-    <div class="eyebrow">Xoi Xotorko — "count of the water" · relief fund tracker</div>
-    <h1>Every rupee pledged for Assam's floods, <em>held up to the light.</em></h1>
-    <p class="lede">Big donations get press releases. What's harder to find is a running total, a list of who gave what, and where it actually went. This page collects what's been publicly confirmed — and marks plainly what hasn't been disclosed yet.</p>
+    <div class="eyebrow" data-i18n="eyebrow">Xoi Xotorko — "count of the water" · relief fund tracker</div>
+    <h1 data-i18n="h1">Every rupee pledged for Assam's floods, <em>held up to the light.</em></h1>
+    <p class="lede" data-i18n="lede">Big donations get press releases. What's harder to find is a running total, a list of who gave what, and where it actually went. This page collects what's been publicly confirmed — and marks plainly what hasn't been disclosed yet.</p>
     <div class="hero-actions">
-      <a href="#donate" class="btn btn-brass">See verified ways to give</a>
-      <a href="#ledger" class="btn btn-ghost">View the ledger</a>
+      <a href="#donate" class="btn btn-brass" data-i18n="cta-give">See verified ways to give</a>
+      <a href="#ledger" class="btn btn-ghost" data-i18n="cta-ledger">View the ledger</a>
     </div>
   </div>
 
@@ -303,7 +338,7 @@
   <section id="channels">
     <div class="wrap">
       <div class="section-head">
-        <h2>One page, every channel</h2>
+        <h2 data-i18n="h2-channels">One page, every channel</h2>
         <div class="sub">Different organisations are collecting in different currencies for different scopes of work. Shown side by side, not blended into one misleading number.</div>
       </div>
       <div id="channel-totals"></div>
@@ -313,9 +348,10 @@
   <section id="ledger">
     <div class="wrap">
       <div class="section-head">
-        <h2>Donor ledger</h2>
-        <div class="sub">Named contributions reported in press or official statements since the floods began. Each row links to its source.</div>
+        <h2><span data-i18n="h2-ledger">Donor ledger</span> <span id="chain-badge" class="chain-badge">checking chain…</span></h2>
+        <div class="sub">Named contributions reported in press or official statements since the floods began. Each row links to its source. Entries are stored in a hash-chained append-only log — editing a past row breaks the chain and is detectable.</div>
       </div>
+      <div id="freshness-banner"></div>
       <table>
         <thead>
           <tr><th>Donor</th><th>Amount</th><th>Reported</th><th>Status</th><th>Source</th></tr>
@@ -328,7 +364,7 @@
   <section>
     <div class="wrap">
       <div class="section-head">
-        <h2>What's confirmed on the ground</h2>
+        <h2 data-i18n="h2-confirmed">What's confirmed on the ground</h2>
         <div class="sub">Scale of the disaster the fund is meant to answer for.</div>
       </div>
       <div class="facts-grid" id="facts-grid"></div>
@@ -338,7 +374,7 @@
   <section>
     <div class="wrap">
       <div class="section-head">
-        <h2>Where it went</h2>
+        <h2 data-i18n="h2-whereitwent">Where it went</h2>
         <div class="sub">This is the part governments are usually slowest to publish. Here's the honest state of it.</div>
       </div>
       <div class="accountability">
@@ -362,7 +398,7 @@
   <section id="field">
     <div class="wrap">
       <div class="section-head">
-        <h2>Who's actually on the ground</h2>
+        <h2 data-i18n="h2-field">Who's actually on the ground</h2>
         <div class="sub">Named organisations with confirmed field operations right now — not addresses or phone numbers we can't verify.</div>
       </div>
       <div class="field-grid" id="field-orgs"></div>
@@ -372,7 +408,7 @@
   <section id="donate">
     <div class="wrap">
       <div class="section-head">
-        <h2>Ways to give, verified</h2>
+        <h2 data-i18n="h2-donate">Ways to give, verified</h2>
         <div class="sub">This page never collects money itself. Every button below sends you to the organisation directly — scan the QR or tap through.</div>
       </div>
       <div class="donate-grid" id="donate-grid"></div>
@@ -2888,6 +2924,44 @@ function renderLedger(data){
     </tr>`).join('');
 }
 
+async function renderChainBadge(){
+  const badge = document.getElementById('chain-badge');
+  if (!badge) return;
+  try {
+    const res = await fetch(`${API_URL}/api/ledger/verify`, { signal: AbortSignal.timeout(2500) });
+    const result = await res.json();
+    if (result.valid){
+      badge.textContent = `🔒 chain verified · ${result.length} entries`;
+      badge.className = 'chain-badge chain-ok';
+    } else {
+      badge.textContent = `⚠ chain integrity broken at entry ${result.brokenAt}`;
+      badge.className = 'chain-badge chain-broken';
+    }
+  } catch (e) {
+    badge.textContent = '';
+  }
+}
+
+function freshnessRow(item){
+  if (item.daysOld === null) return '';
+  if (!item.stale) return '';
+  return `<div class="freshness-item">⚠ ${item.name || 'Data'} is ${item.daysOld} days old (as of ${item.asOf}) — may be outdated.</div>`;
+}
+
+function renderFreshness(data){
+  const el = document.getElementById('freshness-banner');
+  if (!el || !data.freshness) return;
+  const f = data.freshness;
+  const rows = [
+    freshnessRow({ name: 'Official CMRF total', ...f.officialTotal }),
+    freshnessRow(f.ledger),
+    ...(f.channelTotals || []).map(freshnessRow),
+  ].filter(Boolean);
+  el.innerHTML = rows.length
+    ? `<div class="freshness-banner-box">${rows.join('')}</div>`
+    : `<div class="freshness-banner-box freshness-ok">✓ All figures within ${f.staleThresholdDays} days.</div>`;
+}
+
 function renderDisbursement(data){
   document.getElementById('disbursement-gap-note').textContent = data.disbursementGapNote || '';
 
@@ -2979,6 +3053,69 @@ function renderFieldOrgs(data){
     </div>`).join('');
 }
 
+/* ============================================================
+   LANGUAGE TOGGLE — covers page chrome (headers, hero, nav labels).
+   Does NOT translate dynamic content pulled from official-data.json
+   (ledger entries, disbursement notes, NGO descriptions) — that data
+   is sourced in English from press/official statements, and machine-
+   translating live figures risks introducing errors in numbers that
+   matter. Scope this wider only with a native-speaker review pass.
+   ============================================================ */
+const I18N = {
+  en: {
+    badge: "LIVE TRACKER — INDEPENDENT, NOT AN OFFICIAL GOVERNMENT SITE",
+    eyebrow: 'Xoi Xotorko — "count of the water" · relief fund tracker',
+    h1: 'Every rupee pledged for Assam\'s floods, <em>held up to the light.</em>',
+    lede: "Big donations get press releases. What's harder to find is a running total, a list of who gave what, and where it actually went. This page collects what's been publicly confirmed — and marks plainly what hasn't been disclosed yet.",
+    "cta-give": "See verified ways to give",
+    "cta-ledger": "View the ledger",
+    "h2-channels": "One page, every channel",
+    "h2-ledger": "Donor ledger",
+    "h2-confirmed": "What's confirmed on the ground",
+    "h2-whereitwent": "Where it went",
+    "h2-field": "Who's actually on the ground",
+    "h2-donate": "Ways to give, verified",
+  },
+  as: {
+    badge: "প্ৰত্যক্ষ ট্ৰেকাৰ — স্বতন্ত্ৰ, চৰকাৰী ৱেবছাইট নহয়",
+    eyebrow: "খ'ৰ খতৰক (পানীৰ হিচাপ) · সহায় তহবিল ট্ৰেকাৰ",
+    h1: "অসমৰ বানপানীৰ বাবে দিয়া প্ৰতিটো টকা, <em>পোহৰলৈ আনি চোৱা।</em>",
+    lede: "বৃহৎ দানৰ বাতৰি ওলায়। বিচাৰি পোৱা টান হৈ পৰে চলিত মুঠ পৰিমাণ, কোনে কি দিলে তাৰ তালিকা, আৰু সেয়া প্ৰকৃততে ক'লৈ গ'ল। এই পৃষ্ঠাত জনসাধাৰণে নিশ্চিত কৰা তথ্যহে সংগ্ৰহ কৰা হৈছে — আৰু যি এতিয়াও প্ৰকাশ কৰা হোৱা নাই তাক স্পষ্টকৈ চিহ্নিত কৰা হৈছে।",
+    "cta-give": "সত্যাপিত দানৰ উপায় চাওক",
+    "cta-ledger": "লেজাৰ চাওক",
+    "h2-channels": "এখন পৃষ্ঠা, প্ৰতিটো চেনেল",
+    "h2-ledger": "দাতাৰ লেজাৰ",
+    "h2-confirmed": "মাটিত নিশ্চিত হোৱা তথ্য",
+    "h2-whereitwent": "টকা ক'লৈ গ'ল",
+    "h2-field": "প্ৰকৃততে মাটিত কোন আছে",
+    "h2-donate": "দানৰ সত্যাপিত উপায়",
+  },
+};
+
+function applyLang(lang){
+  const dict = I18N[lang] || I18N.en;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key] !== undefined) el.innerHTML = dict[key];
+  });
+  document.querySelectorAll('#lang-toggle button').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  document.documentElement.lang = lang === 'as' ? 'as' : 'en';
+  try { localStorage.setItem('preferredLang', lang); } catch (e) {}
+}
+
+function setupLangToggle(){
+  const toggle = document.getElementById('lang-toggle');
+  if (!toggle) return;
+  toggle.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+  });
+  let saved = 'en';
+  try { saved = localStorage.getItem('preferredLang') || 'en'; } catch (e) {}
+  applyLang(saved);
+}
+
 (async function init(){
   const data = await loadData();
   renderGauge(data);
@@ -2990,6 +3127,9 @@ function renderFieldOrgs(data){
   renderDonate(data);
   renderChannelTotals(data);
   renderFieldOrgs(data);
+  renderFreshness(data);
+  renderChainBadge();
+  setupLangToggle();
 })();
 </script>
 
